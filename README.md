@@ -89,8 +89,8 @@ Contains:
 
 **Tips for filming:**
 - Use a tripod (static camera) when possible and use the `--static_camera` flag
-- Ensure good background texture (brick walls, bookshelves -- not blank white walls)
-- Don't let the person fill the entire frame -- leave background visible
+- Ensure good background texture (brick walls, bookshelves and blank white walls)
+
 
 ---
 
