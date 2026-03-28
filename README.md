@@ -2,7 +2,7 @@
 
 End-to-end pipeline for training a Unitree G1 humanoid robot to imitate human motions captured from video.
 
-**Film a video of a person doing a motion** &rarr; **Extract 3D human pose (TRAM)** &rarr; **Convert to robot format (ASAP)** &rarr; **Train RL policy** &rarr; **Deploy to real G1 robot**
+**Film a video of a person doing a motion** -> **Extract 3D human pose (TRAM)** -> **Convert to robot format (ASAP)** -> **Train RL policy** -> **Deploy to real G1 robot**
 
 Built on top of [TRAM](https://github.com/yufu-wang/TRAM) and [ASAP](https://github.com/LeCAR-Lab/ASAP).
 
@@ -89,8 +89,8 @@ Contains:
 
 **Tips for filming:**
 - Use a tripod (static camera) when possible and use the `--static_camera` flag
-- Ensure good background texture (brick walls, bookshelves &mdash; not blank white walls)
-- Don't let the person fill the entire frame &mdash; leave background visible
+- Ensure good background texture (brick walls, bookshelves -- not blank white walls)
+- Don't let the person fill the entire frame -- leave background visible
 
 ---
 
@@ -106,18 +106,18 @@ python convert_tram_to_asap.py <video_name> --fps 30 --smooth 5
 
 **What this script does:**
 
-1. **Rotation format conversion:** Rotation matrices (3x3) &rarr; axis-angle (3 values) using:
+1. **Rotation format conversion:** Rotation matrices (3x3) -> axis-angle (3 values) using:
    - Angle: `cos(theta) = (trace(R) - 1) / 2`
    - Axis: `k = 1/(2*sin(theta)) * [R32-R23, R13-R31, R21-R12]`
    - Result: `axis_angle = axis * theta`
 
-2. **Coordinate system fix:** Camera coords (Y-down) &rarr; world coords (Z-up) via 90-degree rotation around X-axis
+2. **Coordinate system fix:** Camera coords (Y-down) -> world coords (Z-up) via 90-degree rotation around X-axis
 
-3. **Translation:** X and Y are zeroed out to prevent drift (keeps Z height). For locomotion motions, you may want to preserve X/Y &mdash; see [Known Issues](#known-issues).
+3. **Translation:** X and Y are zeroed out to prevent drift (keeps Z height). For locomotion motions, you may want to preserve X/Y -- see [Known Issues](#known-issues).
 
 4. **Temporal smoothing:** Applies `uniform_filter1d` to reduce TRAM's frame-to-frame jitter
 
-5. **Shape averaging:** Per-frame betas (N, 10) &rarr; single averaged vector (16,)
+5. **Shape averaging:** Per-frame betas (N, 10) -> single averaged vector (16,)
 
 **Output:** `ASAP/humanoidverse/data/motions/raw_tairantestbed_smpl/<name>_amass.npz`
 
@@ -194,17 +194,17 @@ python humanoidverse/train_agent.py \
 ```
 
 **Training tips:**
-- Use `num_envs=4096` or higher &mdash; more environments = better gradient estimates = faster learning
+- Use `num_envs=4096` or higher -- more environments = better gradient estimates = faster learning
 - Use `headless=True` for faster training, `headless=False` to watch
 - RTX 4090 (24GB) comfortably handles 4096 envs (~5.8GB VRAM)
 - Monitor with TensorBoard: `tensorboard --logdir=logs/<project_name>/` (in a separate terminal)
 
 **Key metrics to monitor:**
-- `Train/mean_reward` &mdash; should increase over time
-- `Train/mean_episode_length` &mdash; should increase until it matches the motion clip length
-- `Env/upper_body_diff_norm` &mdash; upper body tracking error (lower = better)
-- `Env/joint_pos_diff_norm` &mdash; joint position error (lower = better)
-- `rew_termination` &mdash; how often the robot falls (closer to 0 = better)
+- `Train/mean_reward` -- should increase over time
+- `Train/mean_episode_length` -- should increase until it matches the motion clip length
+- `Env/upper_body_diff_norm` -- upper body tracking error (lower = better)
+- `Env/joint_pos_diff_norm` -- joint position error (lower = better)
+- `rew_termination` -- how often the robot falls (closer to 0 = better)
 
 Training typically converges when the reward plateaus and the episode length matches the motion clip duration.
 
@@ -232,7 +232,7 @@ The trained policy is automatically exported as ONNX (`exported/model_XXXX.onnx`
 **Safety procedure:**
 1. Hang the G1 from a crane/harness
 2. Power on the robot
-3. Run the policy with the robot suspended &mdash; verify joints move correctly
+3. Run the policy with the robot suspended -- verify joints move correctly
 4. If it looks good, slowly lower until feet touch the ground
 5. Gradually let it bear its own weight with the harness as backup
 6. Keep a hand on the emergency stop at all times
